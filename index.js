@@ -2,6 +2,8 @@ const { Client, LocalAuth, Poll } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const cron = require('node-cron');
 const express = require('express');
+const qrImage = require('qr-image');
+const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,10 +21,19 @@ const client = new Client({
     }
 });
 
+
+
 client.on('qr', (qr) => {
-    // This will print the QR code in the Render "Logs" tab
-    qrcode.generate(qr, { small: true });
-    console.log('SCAN THIS QR CODE IN YOUR RENDER LOGS');
+    // This saves the QR code as a file named "qr.png" in your project folder
+    const code = qrImage.image(qr, { type: 'png' });
+    code.pipe(fs.createWriteStream('qr.png'));
+    
+    console.log('QR Code received! Visit your-app-url.onrender.com/qr to see it.');
+});
+
+// Add this route to your Express server section
+app.get('/qr', (req, res) => {
+    res.sendFile(__dirname + '/qr.png');
 });
 
 client.on('ready', () => {
