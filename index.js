@@ -50,7 +50,7 @@ client.on('ready', async () => {
 
     // SCHEDULE: Thursday at 08:00
     cron.schedule('0 8 * * 4', async () => {
-        const chatId = 'FEUcUIHjJj32cALByDJ9EU@g.us'; 
+        const chatId = ''; 
         try {
             await client.sendMessage(chatId, new Poll('Weekly Poll', ['Yes', 'No']));
             console.log('Poll sent!');
